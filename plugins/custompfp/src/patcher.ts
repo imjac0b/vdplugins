@@ -1,9 +1,11 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
+import { findByProps, findByStoreName, findByName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 import { getStorage } from "./storage";
+import { BADGE_NAMES, BADGE_ICONS } from "./badges";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
 const getUserBannerURL = findByProps("default", "getUserBannerURL");
+const useBadgesModule = findByName("useBadges", false);
 
 const UserStore = findByStoreName("UserStore");
 
@@ -30,7 +32,12 @@ export default async () => {
   const patches: (() => void)[] = [];
 
   const storage = getStorage();
-  if (!storage.staticPFP && !storage.animatedPFP && !storage.banner) {
+  if (
+    !storage.staticPFP &&
+    !storage.animatedPFP &&
+    !storage.banner &&
+    !storage.badges?.length
+  ) {
     return () => void 0;
   }
 
@@ -97,6 +104,36 @@ export default async () => {
       }
     })
   );
+
+  if (storage.badges && storage.badges.length > 0 && useBadgesModule) {
+    patches.push(
+      after("default", useBadgesModule, ([user], result) => {
+        const currentUserId = getCurrentUserId();
+        if (user?.id !== currentUserId || !result || !Array.isArray(result))
+          return;
+
+        const currentStorage = getStorage();
+        const badges = currentStorage.badges || [];
+
+        badges.forEach((badgeFlag) => {
+          const badgeName = BADGE_NAMES[badgeFlag];
+          const badgeIcon = BADGE_ICONS[badgeFlag];
+          if (!badgeName) return;
+
+          const badgeId = `custompfp-${currentUserId}-${badgeFlag}`;
+
+          // Check if badge already exists
+          if (result.some((b: any) => b.id === badgeId)) return;
+
+          result.push({
+            id: badgeId,
+            description: badgeName,
+            icon: badgeIcon || "ic_badge_staff",
+          });
+        });
+      })
+    );
+  }
 
   return () => {
     for (const x of patches) {

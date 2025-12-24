@@ -1,22 +1,35 @@
 import { React } from "@vendetta/metro/common";
 import { Forms } from "@vendetta/ui/components";
 import { getStorage, setStorage } from "./storage";
+import { BADGE_LIST } from "./badges";
 
-const { FormSection, FormInput, FormDivider } = Forms;
+const { FormSection, FormInput, FormDivider, FormSwitch } = Forms;
 
 export default () => {
   const storage = getStorage();
   const [staticPFP, setStaticPFP] = React.useState(storage.staticPFP ?? "");
   const [animatedPFP, setAnimatedPFP] = React.useState(storage.animatedPFP ?? "");
   const [banner, setBanner] = React.useState(storage.banner ?? "");
+  const [selectedBadges, setSelectedBadges] = React.useState<number[]>(storage.badges ?? []);
 
   React.useEffect(() => {
     setStorage({
       staticPFP: staticPFP.trim() || undefined,
       animatedPFP: animatedPFP.trim() || undefined,
       banner: banner.trim() || undefined,
+      badges: selectedBadges.length > 0 ? selectedBadges : undefined,
     });
-  }, [staticPFP, animatedPFP, banner]);
+  }, [staticPFP, animatedPFP, banner, selectedBadges]);
+
+  const toggleBadge = (badgeValue: number) => {
+    setSelectedBadges((prev) => {
+      if (prev.includes(badgeValue)) {
+        return prev.filter((v) => v !== badgeValue);
+      } else {
+        return [...prev, badgeValue];
+      }
+    });
+  };
 
   return (
     <>
@@ -45,6 +58,16 @@ export default () => {
           placeholder="https://example.com/banner.png"
           helperText="Optional: URL for profile banner"
         />
+      </FormSection>
+      <FormSection title="Badge Settings">
+        {BADGE_LIST.map((badge) => (
+          <FormSwitch
+            key={badge.value}
+            title={badge.label}
+            value={selectedBadges.includes(badge.value)}
+            onValueChange={() => toggleBadge(badge.value)}
+          />
+        ))}
       </FormSection>
     </>
   );

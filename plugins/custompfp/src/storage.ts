@@ -4,12 +4,14 @@ export interface CustomPFPStorage {
   staticPFP?: string;
   animatedPFP?: string;
   banner?: string;
+  badges?: number[];
 }
 
 const defaultStorage: CustomPFPStorage = {
   staticPFP: undefined,
   animatedPFP: undefined,
   banner: undefined,
+  badges: [],
 };
 
 const STORAGE_KEY = `custompfp_${id}`;
