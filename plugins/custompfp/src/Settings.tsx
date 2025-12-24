@@ -1,4 +1,4 @@
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { Forms } from "@vendetta/ui/components";
 import { getStorage, setStorage } from "./storage";
 import { BADGES } from "./badges";
@@ -37,7 +37,7 @@ export default () => {
   };
 
   return (
-    <>
+    <RN.ScrollView>
       <FormSection title="Profile Picture Settings">
         <FormInput
           title="Static Profile Picture URL"
@@ -78,6 +78,6 @@ export default () => {
           />
         ))}
       </FormSection>
-    </>
+    </RN.ScrollView>
   );
 };
