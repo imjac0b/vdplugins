@@ -16,6 +16,22 @@ export default () => {
   const [selectedBadges, setSelectedBadges] = React.useState<number[]>(
     storage.badges ?? []
   );
+  const [globalName, setGlobalName] = React.useState(
+    storage.globalName ?? ""
+  );
+  const [username, setUsername] = React.useState(storage.username ?? "");
+  const [bot, setBot] = React.useState(
+    storage.bot !== undefined ? storage.bot : false
+  );
+  const [system, setSystem] = React.useState(
+    storage.system !== undefined ? storage.system : false
+  );
+  const [botTouched, setBotTouched] = React.useState(
+    storage.bot !== undefined
+  );
+  const [systemTouched, setSystemTouched] = React.useState(
+    storage.system !== undefined
+  );
 
   React.useEffect(() => {
     setStorage({
@@ -23,8 +39,12 @@ export default () => {
       animatedPFP: animatedPFP.trim() || undefined,
       banner: banner.trim() || undefined,
       badges: selectedBadges.length > 0 ? selectedBadges : undefined,
+      globalName: globalName.trim() || undefined,
+      username: username.trim() || undefined,
+      bot: botTouched ? bot : undefined,
+      system: systemTouched ? system : undefined,
     });
-  }, [staticPFP, animatedPFP, banner, selectedBadges]);
+  }, [staticPFP, animatedPFP, banner, selectedBadges, globalName, username, botTouched, bot, systemTouched, system]);
 
   const toggleBadge = (badgeValue: number) => {
     setSelectedBadges((prev) => {
@@ -38,6 +58,49 @@ export default () => {
 
   return (
     <RN.ScrollView>
+      <FormSection title="User Info Settings">
+        <FormInput
+          title="Display Name (globalName)"
+          value={globalName}
+          onChange={(v) => setGlobalName(v)}
+          placeholder="Custom Display Name"
+          helperText="Optional: Custom display name"
+        />
+        <FormDivider />
+        <FormInput
+          title="Username"
+          value={username}
+          onChange={(v) => setUsername(v)}
+          placeholder="customusername"
+          helperText="Optional: Custom username"
+        />
+        <FormDivider />
+        <FormRow
+          label={<FormText>Bot Account</FormText>}
+          trailing={
+            <FormSwitch
+              value={bot}
+              onValueChange={(v) => {
+                setBotTouched(true);
+                setBot(v);
+              }}
+            />
+          }
+        />
+        <FormDivider />
+        <FormRow
+          label={<FormText>System Account</FormText>}
+          trailing={
+            <FormSwitch
+              value={system}
+              onValueChange={(v) => {
+                setSystemTouched(true);
+                setSystem(v);
+              }}
+            />
+          }
+        />
+      </FormSection>
       <FormSection title="Profile Picture Settings">
         <FormInput
           title="Static Profile Picture URL"

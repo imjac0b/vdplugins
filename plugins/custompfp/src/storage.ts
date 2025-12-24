@@ -5,6 +5,10 @@ export interface CustomPFPStorage {
   animatedPFP?: string;
   banner?: string;
   badges?: number[];
+  globalName?: string;
+  username?: string;
+  bot?: boolean;
+  system?: boolean;
 }
 
 const defaultStorage: CustomPFPStorage = {
@@ -12,6 +16,10 @@ const defaultStorage: CustomPFPStorage = {
   animatedPFP: undefined,
   banner: undefined,
   badges: [],
+  globalName: undefined,
+  username: undefined,
+  bot: undefined,
+  system: undefined,
 };
 
 const STORAGE_KEY = `custompfp_${id}`;

@@ -36,7 +36,11 @@ export default async () => {
     !storage.staticPFP &&
     !storage.animatedPFP &&
     !storage.banner &&
-    !storage.badges?.length
+    !storage.badges?.length &&
+    !storage.globalName &&
+    !storage.username &&
+    storage.bot === undefined &&
+    storage.system === undefined
   ) {
     return () => void 0;
   }
@@ -48,11 +52,34 @@ export default async () => {
       const currentUserId = getCurrentUserId();
       if (id !== currentUserId) return;
 
+      const currentStorage = getStorage();
+
+      // Handle avatar animation
       const animatedPFP = getCustomAvatar(false);
       const ext = animatedPFP && urlExt(animatedPFP);
       if (ext === "gif" && ret) {
         const avatar = ret.avatar ?? "0";
         ret.avatar = !avatar.startsWith("a_") ? `a_${avatar}` : avatar;
+      }
+
+      // Handle display name (globalName)
+      if (currentStorage.globalName !== undefined && ret) {
+        ret.globalName = currentStorage.globalName;
+      }
+
+      // Handle username
+      if (currentStorage.username !== undefined && ret) {
+        ret.username = currentStorage.username;
+      }
+
+      // Handle bot flag
+      if (currentStorage.bot !== undefined && ret) {
+        ret.bot = currentStorage.bot;
+      }
+
+      // Handle system flag
+      if (currentStorage.system !== undefined && ret) {
+        ret.system = currentStorage.system;
       }
     })
   );
