@@ -3,6 +3,7 @@ import { after } from "@vendetta/patcher";
 import { getStorage } from "./storage";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
+const getUserBannerURL = findByProps("default", "getUserBannerURL");
 
 const UserStore = findByStoreName("UserStore");
 
@@ -29,7 +30,7 @@ export default async () => {
   const patches: (() => void)[] = [];
 
   const storage = getStorage();
-  if (!storage.staticPFP && !storage.animatedPFP) {
+  if (!storage.staticPFP && !storage.animatedPFP && !storage.banner) {
     return () => void 0;
   }
 
@@ -81,6 +82,19 @@ export default async () => {
       }
 
       return { uri: custom };
+    })
+  );
+
+  patches.push(
+    after("getUserBannerURL", getUserBannerURL, ([user]) => {
+      const currentUserId = getCurrentUserId();
+      if (user?.id !== currentUserId) return;
+
+      const currentStorage = getStorage();
+      // Only apply custom banner if user doesn't have a banner
+      if (user?.banner === undefined && currentStorage.banner) {
+        return currentStorage.banner;
+      }
     })
   );
 
