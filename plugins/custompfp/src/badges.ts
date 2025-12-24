@@ -1,61 +1,71 @@
-// Discord User Flags (badge types)
-export const BADGE_FLAGS = {
-  STAFF: 1 << 0, // 1
-  PARTNER: 1 << 1, // 2
-  HYPESQUAD: 1 << 2, // 4
-  BUG_HUNTER_LEVEL_1: 1 << 3, // 8
-  HYPESQUAD_ONLINE_HOUSE_1: 1 << 6, // 64 (Bravery)
-  HYPESQUAD_ONLINE_HOUSE_2: 1 << 7, // 128 (Brilliance)
-  HYPESQUAD_ONLINE_HOUSE_3: 1 << 8, // 256 (Balance)
-  PREMIUM_EARLY_SUPPORTER: 1 << 9, // 512
-  TEAM_PSEUDO_USER: 1 << 10, // 1024
-  BUG_HUNTER_LEVEL_2: 1 << 14, // 16384
-  VERIFIED_BOT: 1 << 16, // 65536
-  VERIFIED_DEVELOPER: 1 << 17, // 131072
-  CERTIFIED_MODERATOR: 1 << 18, // 262144
-  BOT_HTTP_INTERACTIONS: 1 << 19, // 524288
-  ACTIVE_DEVELOPER: 1 << 22, // 4194304
-} as const;
+// Discord badge definitions
+export const BADGES = [
+  {
+    value: 1 << 0,
+    label: "Discord Staff",
+    icon: "5e74e9b61934fc1f67c65515d1f7e60d",
+  },
+  {
+    value: 1 << 1,
+    label: "Partnered Server Owner",
+    icon: "3f9748e53446a137a052f3454e2de41e",
+  },
+  {
+    value: 1 << 2,
+    label: "HypeSquad Events",
+    icon: "bf01d1073931f921909045f3a39fd264",
+  },
+  {
+    value: 1 << 3,
+    label: "Discord Bug Hunter",
+    icon: "2717692c7dca7289b35297368a940dd0",
+  },
+  {
+    value: 1 << 6,
+    label: "HypeSquad Bravery",
+    icon: "8a88d63823d8a71cd5e390baa45efa02",
+  },
+  {
+    value: 1 << 7,
+    label: "HypeSquad Brilliance",
+    icon: "011940fd013da3f7fb926e4a1cd2e618",
+  },
+  {
+    value: 1 << 8,
+    label: "HypeSquad Balance",
+    icon: "3aa41de486fa12454c3761e8e223442e",
+  },
+  {
+    value: 1 << 9,
+    label: "Early Supporter",
+    icon: "7060786766c9c840eb3019e725d2b358",
+  },
+  {
+    value: 1 << 14,
+    label: "Discord Bug Hunter",
+    icon: "848f79194d4be5ff5f81505cbd0ce1e6",
+  },
+  {
+    value: 1 << 17,
+    label: "Early Verified Bot Developer",
+    icon: "6df5892e0f35b051f8b61eace34f4967",
+  },
+  {
+    value: 1 << 18,
+    label: "Moderator Programmes Alumni",
+    icon: "fee1624003e2fee35cb398e125dc479b",
+  },
+  {
+    value: 1 << 22,
+    label: "Active Developer",
+    icon: "6bdc42827a38498929a4920da12695d9",
+  },
+] as const;
 
-export const BADGE_NAMES: Record<number, string> = {
-  [BADGE_FLAGS.STAFF]: "Staff",
-  [BADGE_FLAGS.PARTNER]: "Partner",
-  [BADGE_FLAGS.HYPESQUAD]: "HypeSquad Events",
-  [BADGE_FLAGS.BUG_HUNTER_LEVEL_1]: "Bug Hunter Level 1",
-  [BADGE_FLAGS.HYPESQUAD_ONLINE_HOUSE_1]: "HypeSquad Bravery",
-  [BADGE_FLAGS.HYPESQUAD_ONLINE_HOUSE_2]: "HypeSquad Brilliance",
-  [BADGE_FLAGS.HYPESQUAD_ONLINE_HOUSE_3]: "HypeSquad Balance",
-  [BADGE_FLAGS.PREMIUM_EARLY_SUPPORTER]: "Early Supporter",
-  [BADGE_FLAGS.TEAM_PSEUDO_USER]: "Team User",
-  [BADGE_FLAGS.BUG_HUNTER_LEVEL_2]: "Bug Hunter Level 2",
-  [BADGE_FLAGS.VERIFIED_BOT]: "Verified Bot",
-  [BADGE_FLAGS.VERIFIED_DEVELOPER]: "Verified Developer",
-  [BADGE_FLAGS.CERTIFIED_MODERATOR]: "Certified Moderator",
-  [BADGE_FLAGS.BOT_HTTP_INTERACTIONS]: "Bot HTTP Interactions",
-  [BADGE_FLAGS.ACTIVE_DEVELOPER]: "Active Developer",
-};
+export const BADGE_NAMES: Record<number, string> = Object.fromEntries(
+  BADGES.map((b) => [b.value, b.label])
+);
 
-export const BADGE_ICONS: Record<number, string> = {
-  [BADGE_FLAGS.STAFF]: "ic_badge_staff",
-  [BADGE_FLAGS.PARTNER]: "ic_badge_partner",
-  [BADGE_FLAGS.HYPESQUAD]: "ic_badge_hypesquad",
-  [BADGE_FLAGS.BUG_HUNTER_LEVEL_1]: "ic_badge_bug_hunter",
-  [BADGE_FLAGS.HYPESQUAD_ONLINE_HOUSE_1]: "ic_badge_hypesquad_bravery",
-  [BADGE_FLAGS.HYPESQUAD_ONLINE_HOUSE_2]: "ic_badge_hypesquad_brilliance",
-  [BADGE_FLAGS.HYPESQUAD_ONLINE_HOUSE_3]: "ic_badge_hypesquad_balance",
-  [BADGE_FLAGS.PREMIUM_EARLY_SUPPORTER]: "ic_badge_early_supporter",
-  [BADGE_FLAGS.TEAM_PSEUDO_USER]: "ic_badge_team",
-  [BADGE_FLAGS.BUG_HUNTER_LEVEL_2]: "ic_badge_bug_hunter",
-  [BADGE_FLAGS.VERIFIED_BOT]: "ic_badge_verified_bot",
-  [BADGE_FLAGS.VERIFIED_DEVELOPER]: "ic_badge_verified_developer",
-  [BADGE_FLAGS.CERTIFIED_MODERATOR]: "ic_badge_certified_moderator",
-  [BADGE_FLAGS.BOT_HTTP_INTERACTIONS]: "ic_badge_bot",
-  [BADGE_FLAGS.ACTIVE_DEVELOPER]: "ic_badge_active_developer",
-};
-
-export const BADGE_LIST = Object.entries(BADGE_FLAGS).map(([name, value]) => ({
-  name,
-  value,
-  label: BADGE_NAMES[value],
-  icon: BADGE_ICONS[value],
-}));
+export const BADGE_ICONS: Record<number, string> = Object.fromEntries(
+  BADGES.map((b) => [b.value, b.icon])
+);

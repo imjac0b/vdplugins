@@ -105,32 +105,34 @@ export default async () => {
     })
   );
 
-  if (storage.badges && storage.badges.length > 0 && useBadgesModule) {
+  if (useBadgesModule) {
     patches.push(
-      after("default", useBadgesModule, ([user], result) => {
-        const currentUserId = getCurrentUserId();
-        if (user?.id !== currentUserId || !result || !Array.isArray(result))
-          return;
-
+      after("default", useBadgesModule, ([user], ret) => {
         const currentStorage = getStorage();
+        if (!currentStorage.badges?.length) return ret;
+
+        const currentUserId = getCurrentUserId();
+        const userId = user?.userId || user?.id;
+        if (userId !== currentUserId) return ret;
+
         const badges = currentStorage.badges || [];
 
-        badges.forEach((badgeFlag) => {
-          const badgeName = BADGE_NAMES[badgeFlag];
-          const badgeIcon = BADGE_ICONS[badgeFlag];
-          if (!badgeName) return;
+        return [
+          ...badges
+            .map((badgeFlag, i) => {
+              const badgeName = BADGE_NAMES[badgeFlag];
+              const badgeIcon = BADGE_ICONS[badgeFlag];
+              if (!badgeName || !badgeIcon) return null;
 
-          const badgeId = `custompfp-${currentUserId}-${badgeFlag}`;
-
-          // Check if badge already exists
-          if (result.some((b: any) => b.id === badgeId)) return;
-
-          result.push({
-            id: badgeId,
-            description: badgeName,
-            icon: badgeIcon || "ic_badge_staff",
-          });
-        });
+              return {
+                id: `custompfp-${userId}-${badgeFlag}-${i}`,
+                icon: badgeIcon,
+                description: badgeName,
+              };
+            })
+            .filter((b): b is NonNullable<typeof b> => b !== null),
+          ...(Array.isArray(ret) ? ret : []),
+        ];
       })
     );
   }

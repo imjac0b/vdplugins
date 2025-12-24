@@ -1,16 +1,21 @@
 import { React } from "@vendetta/metro/common";
 import { Forms } from "@vendetta/ui/components";
 import { getStorage, setStorage } from "./storage";
-import { BADGE_LIST } from "./badges";
+import { BADGES } from "./badges";
 
-const { FormSection, FormInput, FormDivider, FormSwitch } = Forms;
+const { FormSection, FormInput, FormDivider, FormSwitch, FormRow, FormText } =
+  Forms;
 
 export default () => {
   const storage = getStorage();
   const [staticPFP, setStaticPFP] = React.useState(storage.staticPFP ?? "");
-  const [animatedPFP, setAnimatedPFP] = React.useState(storage.animatedPFP ?? "");
+  const [animatedPFP, setAnimatedPFP] = React.useState(
+    storage.animatedPFP ?? ""
+  );
   const [banner, setBanner] = React.useState(storage.banner ?? "");
-  const [selectedBadges, setSelectedBadges] = React.useState<number[]>(storage.badges ?? []);
+  const [selectedBadges, setSelectedBadges] = React.useState<number[]>(
+    storage.badges ?? []
+  );
 
   React.useEffect(() => {
     setStorage({
@@ -60,12 +65,16 @@ export default () => {
         />
       </FormSection>
       <FormSection title="Badge Settings">
-        {BADGE_LIST.map((badge) => (
-          <FormSwitch
+        {BADGES.map((badge) => (
+          <FormRow
             key={badge.value}
-            title={badge.label}
-            value={selectedBadges.includes(badge.value)}
-            onValueChange={() => toggleBadge(badge.value)}
+            label={<FormText>{badge.label}</FormText>}
+            trailing={
+              <FormSwitch
+                value={selectedBadges.includes(badge.value)}
+                onValueChange={() => toggleBadge(badge.value)}
+              />
+            }
           />
         ))}
       </FormSection>
