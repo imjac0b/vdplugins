@@ -9,6 +9,7 @@ export interface CustomPFPStorage {
   username?: string;
   bot?: boolean;
   system?: boolean;
+  nitro?: boolean;
 }
 
 const defaultStorage: CustomPFPStorage = {
@@ -20,6 +21,7 @@ const defaultStorage: CustomPFPStorage = {
   username: undefined,
   bot: undefined,
   system: undefined,
+  nitro: undefined,
 };
 
 const STORAGE_KEY = `custompfp_${id}`;

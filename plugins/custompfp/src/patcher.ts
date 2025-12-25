@@ -40,7 +40,8 @@ export default async () => {
     !storage.globalName &&
     !storage.username &&
     storage.bot === undefined &&
-    storage.system === undefined
+    storage.system === undefined &&
+    storage.nitro === undefined
   ) {
     return () => void 0;
   }
@@ -80,6 +81,19 @@ export default async () => {
       // Handle system flag
       if (currentStorage.system !== undefined && ret) {
         ret.system = currentStorage.system;
+      }
+
+      // Handle nitro
+      if (currentStorage.nitro !== undefined && ret) {
+        if (currentStorage.nitro) {
+          ret.premiumType = 2;
+          ret.premiumState = {
+            premiumSubscriptionType: 4,
+            premiumSource: 1,
+            premiumSubscriptionGroupRole: 0,
+          };
+          ret.premiumSince = new Date();
+        }
       }
     })
   );

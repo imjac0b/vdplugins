@@ -16,9 +16,7 @@ export default () => {
   const [selectedBadges, setSelectedBadges] = React.useState<number[]>(
     storage.badges ?? []
   );
-  const [globalName, setGlobalName] = React.useState(
-    storage.globalName ?? ""
-  );
+  const [globalName, setGlobalName] = React.useState(storage.globalName ?? "");
   const [username, setUsername] = React.useState(storage.username ?? "");
   const [bot, setBot] = React.useState(
     storage.bot !== undefined ? storage.bot : false
@@ -26,11 +24,15 @@ export default () => {
   const [system, setSystem] = React.useState(
     storage.system !== undefined ? storage.system : false
   );
-  const [botTouched, setBotTouched] = React.useState(
-    storage.bot !== undefined
-  );
+  const [botTouched, setBotTouched] = React.useState(storage.bot !== undefined);
   const [systemTouched, setSystemTouched] = React.useState(
     storage.system !== undefined
+  );
+  const [nitro, setNitro] = React.useState(
+    storage.nitro !== undefined ? storage.nitro : false
+  );
+  const [nitroTouched, setNitroTouched] = React.useState(
+    storage.nitro !== undefined
   );
 
   React.useEffect(() => {
@@ -43,8 +45,22 @@ export default () => {
       username: username.trim() || undefined,
       bot: botTouched ? bot : undefined,
       system: systemTouched ? system : undefined,
+      nitro: nitroTouched ? nitro : undefined,
     });
-  }, [staticPFP, animatedPFP, banner, selectedBadges, globalName, username, botTouched, bot, systemTouched, system]);
+  }, [
+    staticPFP,
+    animatedPFP,
+    banner,
+    selectedBadges,
+    globalName,
+    username,
+    botTouched,
+    bot,
+    systemTouched,
+    system,
+    nitroTouched,
+    nitro,
+  ]);
 
   const toggleBadge = (badgeValue: number) => {
     setSelectedBadges((prev) => {
@@ -96,6 +112,19 @@ export default () => {
               onValueChange={(v) => {
                 setSystemTouched(true);
                 setSystem(v);
+              }}
+            />
+          }
+        />
+        <FormDivider />
+        <FormRow
+          label={<FormText>Nitro</FormText>}
+          trailing={
+            <FormSwitch
+              value={nitro}
+              onValueChange={(v) => {
+                setNitroTouched(true);
+                setNitro(v);
               }}
             />
           }
