@@ -59,12 +59,34 @@ for (const plug of await readdir("./plugins")) {
     }
 
     // Post-process the output to map externals to globals
-    // Bun build with IIFE format may leave externals as imports, so we need to replace them
+    // Bun build with IIFE format leaves externals as require() calls, so we need to replace them
     let builtContent = await readFile(outPath, "utf-8");
 
-    // Handle @vendetta imports - replace with global variable references
+    // Handle require() calls for @vendetta modules (Bun wraps them in a function like s("@vendetta/..."))
+    // Match patterns like: s("@vendetta"), s("@vendetta/..."), or require("@vendetta/...")
+    // The function name can be any identifier, so we match any identifier followed by ("@vendetta...")
+    const vendettaRequireRegex = /\w+\(['"](@vendetta[^'"]*)['"]\)/g;
+    builtContent = builtContent.replace(
+      vendettaRequireRegex,
+      (match, moduleId) => {
+        const globalName = getGlobalName(moduleId);
+        if (globalName) {
+          // Replace the entire function call with just the global variable
+          return globalName;
+        }
+        return match;
+      }
+    );
+
+    // Handle require() calls for react (same pattern)
+    builtContent = builtContent.replace(
+      /\w+\(['"]react['"]\)/g,
+      "window.React"
+    );
+
+    // Also handle import statements (in case they weren't transformed)
     const vendettaImportRegex =
-      /import\s+(\{[^}]*\}|\w+)\s+from\s+['"](@vendetta\/[^'"]+)['"];?/g;
+      /import\s+(\{[^}]*\}|\w+)\s+from\s+['"](@vendetta[^'"]*)['"];?/g;
     builtContent = builtContent.replace(
       vendettaImportRegex,
       (match, imports, moduleId) => {
@@ -77,29 +99,13 @@ for (const plug of await readdir("./plugins")) {
       }
     );
 
-    // Handle react import - replace with window.React
+    // Handle react import statements
     const reactImportRegex =
       /import\s+(\{[^}]*\}|\w+)\s+from\s+['"]react['"];?/g;
     builtContent = builtContent.replace(reactImportRegex, (match, imports) => {
       const importNames = imports.trim();
       return `const ${importNames} = window.React;`;
     });
-
-    // Also handle require statements for react
-    builtContent = builtContent.replace(
-      /require\(['"]react['"]\)/g,
-      "window.React"
-    );
-
-    // Handle require statements for @vendetta modules
-    const vendettaRequireRegex = /require\(['"](@vendetta\/[^'"]+)['"]\)/g;
-    builtContent = builtContent.replace(
-      vendettaRequireRegex,
-      (match, moduleId) => {
-        const globalName = getGlobalName(moduleId);
-        return globalName || match;
-      }
-    );
 
     // Write the processed content
     await writeFile(outPath, builtContent);
