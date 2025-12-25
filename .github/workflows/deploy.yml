@@ -24,7 +24,7 @@ jobs:
         run: bun install
 
       - name: Build plugin(s)
-        run: bun ./build.mjs
+        run: bun run build
 
         # Foolproof feature:
         # - Copies over README so that the root of the deployed website shows it
