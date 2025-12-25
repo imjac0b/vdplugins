@@ -1,7 +1,7 @@
 import { findByProps, findByStoreName, findByName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 import { getStorage } from "./storage";
-import { BADGE_NAMES, BADGE_ICONS } from "./badges";
+import { BADGE_NAMES, BADGE_ICONS, BADGE_IDS } from "./badges";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
 const getUserBannerURL = findByProps("default", "getUserBannerURL");
@@ -165,8 +165,11 @@ export default async () => {
               const badgeIcon = BADGE_ICONS[badgeFlag];
               if (!badgeName || !badgeIcon) return null;
 
+              const badgeId =
+                BADGE_IDS[badgeFlag] || `custompfp-${userId}-${badgeFlag}-${i}`;
+
               return {
-                id: `custompfp-${userId}-${badgeFlag}-${i}`,
+                id: badgeId,
                 icon: badgeIcon,
                 description: badgeName,
               };
