@@ -5,6 +5,8 @@ export interface CustomPFPStorage {
   animatedPFP?: string;
   banner?: string;
   badges?: number[];
+  clanTag?: string;
+  clanBadgeHash?: string;
   globalName?: string;
   username?: string;
   bot?: boolean;
@@ -17,6 +19,8 @@ const defaultStorage: CustomPFPStorage = {
   animatedPFP: undefined,
   banner: undefined,
   badges: [],
+  clanTag: undefined,
+  clanBadgeHash: undefined,
   globalName: undefined,
   username: undefined,
   bot: undefined,

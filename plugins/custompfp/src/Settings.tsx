@@ -16,6 +16,10 @@ export default () => {
   const [selectedBadges, setSelectedBadges] = React.useState<number[]>(
     storage.badges ?? []
   );
+  const [clanTag, setClanTag] = React.useState(storage.clanTag ?? "");
+  const [clanBadgeHash, setClanBadgeHash] = React.useState(
+    storage.clanBadgeHash ?? ""
+  );
   const [globalName, setGlobalName] = React.useState(storage.globalName ?? "");
   const [username, setUsername] = React.useState(storage.username ?? "");
   const [bot, setBot] = React.useState(
@@ -41,6 +45,8 @@ export default () => {
       animatedPFP: animatedPFP.trim() || undefined,
       banner: banner.trim() || undefined,
       badges: selectedBadges.length > 0 ? selectedBadges : undefined,
+      clanTag: clanTag.trim() || undefined,
+      clanBadgeHash: clanBadgeHash.trim() || undefined,
       globalName: globalName.trim() || undefined,
       username: username.trim() || undefined,
       bot: botTouched ? bot : undefined,
@@ -52,6 +58,8 @@ export default () => {
     animatedPFP,
     banner,
     selectedBadges,
+    clanTag,
+    clanBadgeHash,
     globalName,
     username,
     botTouched,
@@ -89,6 +97,22 @@ export default () => {
           onChange={(v) => setUsername(v)}
           placeholder="customusername"
           helperText="Optional: Custom username"
+        />
+        <FormDivider />
+        <FormInput
+          title="Clan Tag"
+          value={clanTag}
+          onChange={(v) => setClanTag(v)}
+          placeholder="TAG"
+          helperText="Optional: Sets the primary guild tag"
+        />
+        <FormDivider />
+        <FormInput
+          title="Clan Badge Hash"
+          value={clanBadgeHash}
+          onChange={(v) => setClanBadgeHash(v)}
+          placeholder="badge_hash"
+          helperText="Optional: Sets the primary guild badge hash"
         />
         <FormDivider />
         <FormRow

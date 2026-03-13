@@ -37,6 +37,8 @@ export default async () => {
     !storage.animatedPFP &&
     !storage.banner &&
     !storage.badges?.length &&
+    !storage.clanTag &&
+    !storage.clanBadgeHash &&
     !storage.globalName &&
     !storage.username &&
     storage.bot === undefined &&
@@ -66,6 +68,21 @@ export default async () => {
       // Handle display name (globalName)
       if (currentStorage.globalName !== undefined && ret) {
         ret.globalName = currentStorage.globalName;
+      }
+
+      // Handle clan identity
+      if (ret && (currentStorage.clanTag || currentStorage.clanBadgeHash)) {
+        const upstreamPrimaryGuild = ret.primaryGuild ?? {};
+        const primaryGuild = {
+          ...upstreamPrimaryGuild,
+          identity_enabled: true,
+          identity_guild_id: upstreamPrimaryGuild.identity_guild_id ?? "1",
+          tag: currentStorage.clanTag ?? upstreamPrimaryGuild.tag ?? "",
+          badge:
+            currentStorage.clanBadgeHash ?? upstreamPrimaryGuild.badge ?? "",
+        };
+
+        ret.primaryGuild = primaryGuild;
       }
 
       // Handle username
